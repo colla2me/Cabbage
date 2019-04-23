@@ -24,7 +24,8 @@ extension CMTimeRange {
         var timeRanges: [CMTimeRange] = []
         let instersectionTimeRange = timeRange1.intersection(timeRange2)
         if instersectionTimeRange.duration.seconds > 0 {
-            if (timeRange1.start.seconds < timeRange2.start.seconds) {
+            if (timeRange2.containsTimeRange(timeRange1) ||
+                (timeRange1.start.seconds < timeRange2.start.seconds && timeRange1.end < timeRange2.end)) {
                 timeRanges = mixTimeRanges(minTimeRange: timeRange1, instersectionTimeRange: instersectionTimeRange, maxTimeRange: timeRange2)
             } else {
                 timeRanges = mixTimeRanges(minTimeRange: timeRange2, instersectionTimeRange: instersectionTimeRange, maxTimeRange: timeRange1)
@@ -39,15 +40,15 @@ extension CMTimeRange {
     static func mixTimeRanges(minTimeRange: CMTimeRange, instersectionTimeRange: CMTimeRange, maxTimeRange: CMTimeRange) -> [CMTimeRange] {
         if maxTimeRange.containsTimeRange(minTimeRange) {
             var timeRanges: [CMTimeRange] = []
-            let leftTimeRangeDuration = instersectionTimeRange.start - minTimeRange.start
+            let leftTimeRangeDuration = instersectionTimeRange.start - maxTimeRange.start
             if leftTimeRangeDuration.seconds > 0 {
-                let leftTimeRange = CMTimeRangeMake(minTimeRange.start, leftTimeRangeDuration)
+                let leftTimeRange = CMTimeRangeMake(start: maxTimeRange.start, duration: leftTimeRangeDuration)
                 timeRanges.append(leftTimeRange)
             }
             timeRanges.append(instersectionTimeRange)
             let rightTimeRangeDuration = maxTimeRange.end - instersectionTimeRange.end
             if rightTimeRangeDuration.seconds > 0 {
-                let rightTimeRange = CMTimeRangeMake(instersectionTimeRange.end, rightTimeRangeDuration)
+                let rightTimeRange = CMTimeRangeMake(start: instersectionTimeRange.end, duration: rightTimeRangeDuration)
                 timeRanges.append(rightTimeRange)
             }
             return timeRanges

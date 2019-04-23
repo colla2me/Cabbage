@@ -39,20 +39,20 @@ open class VideoCompositor: NSObject, AVFoundation.AVVideoCompositing  {
     }
     
     open func startRequest(_ request: AVAsynchronousVideoCompositionRequest) {
-        autoreleasepool {
-            renderingQueue.async(execute: { [weak self] in
-                guard let strongSelf = self else { return }
-                if strongSelf.shouldCancelAllRequests {
-                    request.finishCancelledRequest()
-                } else {
+        renderingQueue.async(execute: { [weak self] in
+            guard let strongSelf = self else { return }
+            if strongSelf.shouldCancelAllRequests {
+                request.finishCancelledRequest()
+            } else {
+                autoreleasepool {
                     if let resultPixels = strongSelf.newRenderedPixelBufferForRequest(request: request) {
                         request.finish(withComposedVideoFrame: resultPixels)
                     } else {
                         request.finish(with: PixelBufferRequestError.newRenderedPixelBufferForRequestFailure)
                     }
                 }
-            })
-        }
+            }
+        })
     }
     
     open func cancelAllPendingVideoCompositionRequests() {
@@ -71,8 +71,7 @@ open class VideoCompositor: NSObject, AVFoundation.AVVideoCompositing  {
         var image = CIImage(cvPixelBuffer: outputPixels)
         
         // Background
-        let backgroundColor = CIColor(red: 0, green: 0, blue: 0)
-        let backgroundImage = CIImage(color: backgroundColor).cropped(to: image.extent)
+        let backgroundImage = CIImage(color: instruction.backgroundColor).cropped(to: image.extent)
         image = backgroundImage.composited(over: image)
         
         if let destinationImage = instruction.apply(request: request) {

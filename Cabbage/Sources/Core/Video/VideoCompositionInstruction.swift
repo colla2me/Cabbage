@@ -19,7 +19,9 @@ open class VideoCompositionInstruction: NSObject, AVVideoCompositionInstructionP
     
     open var layerInstructions: [VideoCompositionLayerInstruction] = []
     open var mainTrackIDs: [Int32] = []
-    public var passingThroughVideoCompositionProvider: PassingThroughVideoCompositionProvider?
+    public var passingThroughVideoCompositionProvider: VideoCompositionProvider?
+    
+    public var backgroundColor: CIColor = CIColor(red: 0, green: 0, blue: 0)
     
     public init(thePassthroughTrackID: CMPersistentTrackID, forTimeRange theTimeRange: CMTimeRange) {
         super.init()
@@ -82,7 +84,7 @@ open class VideoCompositionInstruction: NSObject, AVVideoCompositionInstructionP
                     
                     let transitionTimeRange = layerInstruction1.timeRange.intersection(layerInstruction2.timeRange)
                     let tweenFactor = factorForTimeInRange(time, range: transitionTimeRange)
-                    let transitionImage = transition.renderImage(foregroundImage: sourceImage1, backgroundImage: sourceImage2, forTweenFactor: tweenFactor)
+                    let transitionImage = transition.renderImage(foregroundImage: sourceImage2, backgroundImage: sourceImage1, forTweenFactor: tweenFactor, renderSize: renderSize)
                     image = transitionImage
                 } else {
                     image = sourceImage1
@@ -149,7 +151,7 @@ open class VideoCompositionLayerInstruction: CustomDebugStringConvertible {
     
     public var trackID: Int32
     public var videoCompositionProvider: VideoCompositionProvider
-    public var timeRange: CMTimeRange = kCMTimeRangeZero
+    public var timeRange: CMTimeRange = CMTimeRange.zero
     public var transition: VideoTransition?
     public var prefferdTransform: CGAffineTransform?
     

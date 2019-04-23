@@ -9,7 +9,7 @@
 import Foundation
 import CoreGraphics
 
-extension CGRect {
+public extension CGRect {
     func aspectFit(in rect: CGRect) -> CGRect {
         let size = self.size.aspectFit(in: rect.size)
         let x = rect.origin.x + (rect.size.width - size.width) / 2
@@ -25,7 +25,7 @@ extension CGRect {
     }
 }
 
-extension CGSize {
+public extension CGSize {
     func aspectFit(in size: CGSize) -> CGSize {
         var aspectFitSize = size
         let widthRatio = size.width / width
@@ -51,7 +51,7 @@ extension CGSize {
     }
 }
 
-extension CGAffineTransform {
+public extension CGAffineTransform {
     static func transform(by sourceRect: CGRect, aspectFitInRect fitTargetRect: CGRect) -> CGAffineTransform {
         let fitRect = sourceRect.aspectFit(in: fitTargetRect)
         let xRatio = fitRect.size.width / sourceRect.size.width
@@ -79,7 +79,7 @@ extension CGAffineTransform {
     }
 }
 
-extension CGAffineTransform {
+public extension CGAffineTransform {
     func rotationRadians() -> CGFloat {
         return atan2(b, a)
     }

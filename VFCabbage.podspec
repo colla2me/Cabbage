@@ -1,7 +1,7 @@
 Pod::Spec.new do |s|
 
     s.name = 'VFCabbage'
-    s.version = '0.2'
+    s.version = '0.3'
     s.summary = 'A high-level video composition framework build on top of AVFoundation. It\'s simple to use and easy to extend.'
 
     s.description  = <<-DESC
@@ -20,7 +20,7 @@ Pod::Spec.new do |s|
     s.author = { 'Vito' => 'vvitozhang@gmail.com' }
 
     s.platform = :ios, '9.0'
-    s.swift_version = "4.1"
+    s.swift_version = "4.2"
 
     s.source = { :git => 'https://github.com/VideoFlint/Cabbage.git', :tag => s.version.to_s }
     s.source_files = ['Cabbage/Sources/core/**/*.swift', 'Cabbage/Sources/**/*.swift']
